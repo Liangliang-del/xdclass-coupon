@@ -1,8 +1,8 @@
 server:
-  port: 9092
+  port: 9093
 druid:
   allow:
-    ip: 127.0.0.1
+    ip: 116.62.50.136
   login:
     user_name: root
     password: root
@@ -38,3 +38,31 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
     # 合并多个DruidDataSource的监控数据
     #spring.datasource.useGlobalDataSourceStat=true
+dubbo:
+  application:
+    name: user-coupon
+  # 使用 zookeeper 注册中心暴露服务，注意要先开启 zookeeper
+  # 注册中心id
+  registry:
+    id: zookeeper-registry
+    # 注册中心协议
+    protocol: zookeeper
+    # 注册中心地址
+    address: 116.62.50.136:2181
+
+  # dubbo协议在20880端口暴露服务
+  # 协议名称
+  protocol:
+    name: dubbo
+    # 协议端口
+    port: 20881
+    # 协议访问log
+    accesslog: dubbo-access.log
+  # 重试次数
+  provider:
+    retries: 0
+    # 超时时间
+    timeout: 3000
+  # 注册监控中心
+  monitor:
+    protocol: registry
