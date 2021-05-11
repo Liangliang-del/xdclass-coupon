@@ -34,13 +34,11 @@ public interface TCouponMapper {
         "insert into t_coupon (code, pic_url, ",
         "achieve_amount, reduce_amount, ",
         "stock, title, status, ",
-        "create_time, start_time, ",
-        "end_time)",
+        "create_time)",
         "values (#{code,jdbcType=VARCHAR}, #{picUrl,jdbcType=VARCHAR}, ",
         "#{achieveAmount,jdbcType=INTEGER}, #{reduceAmount,jdbcType=INTEGER}, ",
         "#{stock,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, ",
-        "#{createTime,jdbcType=TIMESTAMP}, #{startTime,jdbcType=TIMESTAMP}, ",
-        "#{endTime,jdbcType=TIMESTAMP})"
+        "#{createTime,jdbcType=TIMESTAMP})"
     })
     @Options(useGeneratedKeys=true,keyProperty="id")
     int insert(TCoupon record);
@@ -59,16 +57,13 @@ public interface TCouponMapper {
         @Result(column="stock", property="stock", jdbcType=JdbcType.INTEGER),
         @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
         @Result(column="status", property="status", jdbcType=JdbcType.INTEGER),
-        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="start_time", property="startTime", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="end_time", property="endTime", jdbcType=JdbcType.TIMESTAMP)
+        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP)
     })
     List<TCoupon> selectByExample(TCouponExample example);
 
     @Select({
         "select",
-        "id, code, pic_url, achieve_amount, reduce_amount, stock, title, status, create_time, ",
-        "start_time, end_time",
+        "id, code, pic_url, achieve_amount, reduce_amount, stock, title, status, create_time",
         "from t_coupon",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -81,9 +76,7 @@ public interface TCouponMapper {
         @Result(column="stock", property="stock", jdbcType=JdbcType.INTEGER),
         @Result(column="title", property="title", jdbcType=JdbcType.VARCHAR),
         @Result(column="status", property="status", jdbcType=JdbcType.INTEGER),
-        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="start_time", property="startTime", jdbcType=JdbcType.TIMESTAMP),
-        @Result(column="end_time", property="endTime", jdbcType=JdbcType.TIMESTAMP)
+        @Result(column="create_time", property="createTime", jdbcType=JdbcType.TIMESTAMP)
     })
     TCoupon selectByPrimaryKey(Integer id);
 
@@ -105,9 +98,7 @@ public interface TCouponMapper {
           "stock = #{stock,jdbcType=INTEGER},",
           "title = #{title,jdbcType=VARCHAR},",
           "status = #{status,jdbcType=INTEGER},",
-          "create_time = #{createTime,jdbcType=TIMESTAMP},",
-          "start_time = #{startTime,jdbcType=TIMESTAMP},",
-          "end_time = #{endTime,jdbcType=TIMESTAMP}",
+          "create_time = #{createTime,jdbcType=TIMESTAMP}",
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(TCoupon record);
