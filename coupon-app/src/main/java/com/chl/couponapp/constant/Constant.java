@@ -1,0 +1,12 @@
+package com.chl.couponapp.constant;
+
+/**
+ * @author admin
+ */
+public class Constant {
+
+    public static int USERFUL = 0;
+
+    public static int USERLESS = 1;
+
+}

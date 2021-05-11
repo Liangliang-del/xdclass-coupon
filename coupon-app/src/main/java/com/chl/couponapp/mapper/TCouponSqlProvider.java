@@ -73,6 +73,14 @@ public class TCouponSqlProvider {
             VALUES("create_time", "#{createTime,jdbcType=TIMESTAMP}");
         }
         
+        if (record.getStartTime() != null) {
+            VALUES("start_time", "#{startTime,jdbcType=TIMESTAMP}");
+        }
+        
+        if (record.getEndTime() != null) {
+            VALUES("end_time", "#{endTime,jdbcType=TIMESTAMP}");
+        }
+        
         return SQL();
     }
 
@@ -91,6 +99,8 @@ public class TCouponSqlProvider {
         SELECT("title");
         SELECT("status");
         SELECT("create_time");
+        SELECT("start_time");
+        SELECT("end_time");
         FROM("t_coupon");
         applyWhere(example, false);
         
@@ -151,6 +161,14 @@ public class TCouponSqlProvider {
             SET("create_time = #{record.createTime,jdbcType=TIMESTAMP}");
         }
         
+        if (record.getStartTime() != null) {
+            SET("start_time = #{record.startTime,jdbcType=TIMESTAMP}");
+        }
+        
+        if (record.getEndTime() != null) {
+            SET("end_time = #{record.endTime,jdbcType=TIMESTAMP}");
+        }
+        
         applyWhere(example, true);
         return SQL();
     }
@@ -168,6 +186,8 @@ public class TCouponSqlProvider {
         SET("title = #{record.title,jdbcType=VARCHAR}");
         SET("status = #{record.status,jdbcType=INTEGER}");
         SET("create_time = #{record.createTime,jdbcType=TIMESTAMP}");
+        SET("start_time = #{record.startTime,jdbcType=TIMESTAMP}");
+        SET("end_time = #{record.endTime,jdbcType=TIMESTAMP}");
         
         TCouponExample example = (TCouponExample) parameter.get("example");
         applyWhere(example, true);
@@ -208,6 +228,14 @@ public class TCouponSqlProvider {
         
         if (record.getCreateTime() != null) {
             SET("create_time = #{createTime,jdbcType=TIMESTAMP}");
+        }
+        
+        if (record.getStartTime() != null) {
+            SET("start_time = #{startTime,jdbcType=TIMESTAMP}");
+        }
+        
+        if (record.getEndTime() != null) {
+            SET("end_time = #{endTime,jdbcType=TIMESTAMP}");
         }
         
         WHERE("id = #{id,jdbcType=INTEGER}");

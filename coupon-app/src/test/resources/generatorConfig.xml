@@ -47,9 +47,9 @@
 			<generatedKey column="id" sqlStatement="JDBC"/>
 		</table>
 
-		<table tableName="t_user_coupon">
-			<generatedKey column="id" sqlStatement="JDBC"/>
-		</table>
+<!--		<table tableName="t_user_coupon">-->
+<!--			<generatedKey column="id" sqlStatement="JDBC"/>-->
+<!--		</table>-->
 
 
 
