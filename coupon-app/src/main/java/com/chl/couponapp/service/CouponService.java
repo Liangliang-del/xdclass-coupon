@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -53,6 +54,23 @@ public class CouponService {
                     return loadIdCoupon(o);
                 }
             });
+
+    private Map couponMap = new ConcurrentHashMap();
+
+    public void updateCouponMap(){
+        Map couponMapOne = new ConcurrentHashMap();
+        List<TCoupon> tCouponList = this.loadCoupon(1);
+        couponMapOne.put(1, tCouponList);
+        couponMap = couponMapOne;
+    }
+
+    /***
+     * 获取有效时间的可用优惠券列表
+     * @return
+     */
+    public List<TCoupon> getCouponList4Map(){
+        return (List<TCoupon>)couponMap.get(1);
+    }
 
     private TCoupon loadIdCoupon(Integer id) {
         return tCouponMapper.selectByPrimaryKey(id);
