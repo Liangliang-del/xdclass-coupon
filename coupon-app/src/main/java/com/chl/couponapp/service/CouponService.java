@@ -1,20 +1,19 @@
 package com.chl.couponapp.service;
 
+import com.alibaba.fastjson.JSON;
 import com.chl.couponapp.constant.Constant;
 import com.chl.couponapp.domain.TCoupon;
 import com.chl.couponapp.domain.TCouponExample;
 import com.chl.couponapp.mapper.TCouponMapper;
-import com.chl.userserviceapi.service.IUserService;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
-import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class CouponService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CouponService.class);
 
     //@Reference
     //private IUserService iUserService;
@@ -59,9 +60,15 @@ public class CouponService {
 
     public void updateCouponMap(){
         Map couponMapOne = new ConcurrentHashMap();
-        List<TCoupon> tCouponList = this.loadCoupon(1);
-        couponMapOne.put(1, tCouponList);
-        couponMap = couponMapOne;
+        List<TCoupon> tCouponList = Lists.newArrayList();
+        try {
+            tCouponList = this.loadCoupon(1);
+            couponMapOne.put(1, tCouponList);
+            couponMap = couponMapOne;
+            logger.info("updateCouponList:{}, size:{}", JSON.toJSONString(tCouponList), tCouponList.size());
+        } catch (Exception e) {
+            logger.error("更新失败",e);
+        }
     }
 
     /***
@@ -76,7 +83,7 @@ public class CouponService {
         return tCouponMapper.selectByPrimaryKey(id);
     }
 
-    private List<TCoupon> loadCoupon(Integer o) {
+    public List<TCoupon> loadCoupon(Integer o) {
         TCouponExample example = new TCouponExample();
         example.createCriteria().andStatusEqualTo(Constant.USERFUL)
                 .andStartTimeLessThan(new Date()).andEndTimeGreaterThan(new Date());
