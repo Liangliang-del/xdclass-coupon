@@ -5,6 +5,7 @@ import com.chl.couponapp.constant.Constant;
 import com.chl.couponapp.domain.TCoupon;
 import com.chl.couponapp.domain.TCouponExample;
 import com.chl.couponapp.mapper.TCouponMapper;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -35,6 +36,16 @@ public class CouponService {
 
     @Resource
     private TCouponMapper tCouponMapper;
+
+    com.github.benmanes.caffeine.cache.LoadingCache<Integer, List<TCoupon>> couponCaffeine = Caffeine.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .refreshAfterWrite(5, TimeUnit.MINUTES)
+            .build(new com.github.benmanes.caffeine.cache.CacheLoader<Integer, List<TCoupon>>() {
+                @Override
+                public List<TCoupon> load(Integer o) throws Exception {
+                    return loadCoupon(o);
+                }
+            });
 
     LoadingCache<Integer, List<TCoupon>> couponCache = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -99,6 +110,20 @@ public class CouponService {
         try {
             couponList = couponCache.get(1);
         } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return couponList;
+    }
+
+    /***
+     * 获取有效时间的可用优惠券列表
+     * @return
+     */
+    public List<TCoupon> getCouponList4CacheLoader(){
+        List<TCoupon> couponList = Lists.newArrayList();
+        try {
+            couponList = couponCaffeine.get(1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return couponList;
