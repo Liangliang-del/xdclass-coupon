@@ -4,7 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.chl.couponapp.constant.Constant;
 import com.chl.couponapp.domain.TCoupon;
 import com.chl.couponapp.domain.TCouponExample;
+import com.chl.couponapp.domain.TUserCoupon;
 import com.chl.couponapp.mapper.TCouponMapper;
+import com.chl.couponapp.mapper.TUserCouponMapper;
+import com.chl.couponapp.util.SnowflakeIdWorker;
+import com.chl.couponserviceapi.model.UserCouponModel;
+import com.chl.couponserviceapi.service.ICouponService;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -12,6 +17,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,7 +33,7 @@ import java.util.stream.Collectors;
  * @author admin
  */
 @Service
-public class CouponService {
+public class CouponService implements ICouponService {
 
     private static final Logger logger = LoggerFactory.getLogger(CouponService.class);
 
@@ -36,6 +42,9 @@ public class CouponService {
 
     @Resource
     private TCouponMapper tCouponMapper;
+
+    @Resource
+    private TUserCouponMapper tUserCouponMapper;
 
     com.github.benmanes.caffeine.cache.LoadingCache<Integer, List<TCoupon>> couponCaffeine = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -165,5 +174,36 @@ public class CouponService {
     }
 
 
+    @Override
+    public String saveUserCoupon(UserCouponModel userCouponModel) {
+        String result = check(userCouponModel);
+        if(result!=null){
+            return result;
+        }
+        TCoupon coupon = tCouponMapper.selectByPrimaryKey(userCouponModel.getCouponId());
+        if(coupon==null){
+            return "coupon无效";
+        }
+        return save2DB(userCouponModel, coupon);
+    }
 
+    private String check(UserCouponModel userCouponModel){
+        Integer couponId =  userCouponModel.getCouponId();
+        Integer userId = userCouponModel.getUserId();
+        if(couponId== null||userId == null){
+            return "couponId或者userId为空";
+        }
+        return null;
+    }
+
+    private String save2DB(UserCouponModel dto,TCoupon coupon){
+        TUserCoupon userCoupon = new TUserCoupon();
+        BeanUtils.copyProperties(dto,userCoupon);
+        userCoupon.setPicUrl(coupon.getPicUrl());
+        userCoupon.setCreateTime(new Date());
+        SnowflakeIdWorker worker = new SnowflakeIdWorker(0,0);
+        userCoupon.setUserCouponCode(worker.nextId()+"");
+        tUserCouponMapper.insertSelective(userCoupon);
+        return "领取成功";
+    }
 }
