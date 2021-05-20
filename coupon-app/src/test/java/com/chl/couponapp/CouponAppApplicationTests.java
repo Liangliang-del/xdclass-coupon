@@ -4,6 +4,7 @@ import com.chl.couponapp.domain.TCoupon;
 import com.chl.couponapp.domain.TCouponExample;
 import com.chl.couponapp.mapper.TCouponMapper;
 import com.chl.couponapp.service.CouponService;
+import com.chl.couponserviceapi.model.UserCouponModel;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -67,6 +68,21 @@ class CouponAppApplicationTests {
                 .andAchieveAmountBetween(100,1000).andTitleNotLike("111");
         List<TCoupon> tCoupon =  tCouponMapper.selectByExample(example);
         System.err.println(tCoupon);
+    }
+
+    @Test
+    public void testQuery(){
+        List<TCoupon> tCoupon = couponService.getCouponList();
+        System.out.println(tCoupon);
+    }
+
+    @Test
+    public void testSaveUserCoupon(){
+        UserCouponModel dto = new UserCouponModel();
+        dto.setUserId(1234);
+        dto.setCouponId(1);
+        dto.setOrderId(10086);
+        System.err.println(couponService.saveUserCoupon(dto));
     }
 
 }
